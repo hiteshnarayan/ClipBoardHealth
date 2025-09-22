@@ -4,9 +4,9 @@ This is the server application for Red Planet Staffing, the leading staffing mar
 
 ## Technologies
 
-- [TypeScript](https://www.typescriptlang.org/)
-- [NestJS](https://docs.nestjs.com/)
-- [Prisma](https://www.prisma.io/docs/concepts/components/prisma-client)
+- TypeScript
+- NestJS
+- Prisma
 
 ## Getting Started
 
@@ -26,12 +26,34 @@ npx prisma migrate reset
 npm run start:dev
 ```
 
+## Top Workplaces Script
+
+Compute the top 3 workplaces by completed shifts (cancelled excluded). The script queries the local SQLite database directly via Prisma and prints JSON to stdout.
+
+```bash
+# Optional: reset and seed the DB
+npx prisma migrate reset
+
+# Run the script (outputs JSON)
+npm run start:topWorkplaces
+```
+
+Example output:
+
+```
+[
+  { "name": "Sun Phosphate Software", "shifts": 10 },
+  { "name": "Radiant Power Inc", "shifts": 8 },
+  { "name": "Phobos Studies", "shifts": 6 }
+]
+```
+
 ## API Reference
 
 ### Workers
 
 - `POST /workers`: Create a worker
-  - Body: [`createWorkerSchema`](./src/modules/workers/workers.schemas.ts)
+  - Body: `createWorkerSchema`
 - `GET /workers/:id`: Get worker by ID
   - Params: `:id` - Worker ID
 - `GET /workers`: List all workers
@@ -41,7 +63,7 @@ npm run start:dev
 ### Workplaces
 
 - `POST /workplaces`: Create a workplace
-  - Body: [`createWorkplaceSchema`](./src/modules/workplaces/workplaces.schemas.ts)
+  - Body: `createWorkplaceSchema`
 - `GET /workplaces/:id`: Get workplace by ID
   - Params: `:id` - Workplace ID
 - `GET /workplaces`: List all workplaces
@@ -49,7 +71,7 @@ npm run start:dev
 ### Shifts
 
 - `POST /shifts`: Create a shift
-  - Body: [`createShiftSchema`](./src/modules/shifts/shifts.schemas.ts)
+  - Body: `createShiftSchema`
 - `GET /shifts/:id`: Get shift by ID
   - Params: `:id` - Shift ID
 - `POST /shifts/:id/claim`: Claim a shift

@@ -6,7 +6,7 @@ import { MAX_SHARDS } from "../shared/constants";
 export const createShiftSchema = z.object({
   startAt: z.string(),
   endAt: z.string(),
-  workerId: z.string().optional(),
+  workerId: z.number().int().optional(),
   workplaceId: z.number(),
   shard: z.number().int().min(0).max(MAX_SHARDS).optional(),
 });

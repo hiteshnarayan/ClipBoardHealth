@@ -50,7 +50,8 @@ export function queryParameters(parameters: { page: Page }): {
   const { page } = parameters;
   return {
     take: page.size,
-    skip: page.num * page.size,
+    // page.num is 1-based; convert to 0-based for skip
+    skip: (page.num - 1) * page.size,
     where: { shard: page.shard ?? DEFAULT_SHARD },
   };
 }

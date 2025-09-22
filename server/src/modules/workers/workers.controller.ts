@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -7,11 +8,8 @@ import {
   Post,
   Query,
   Req,
-  UsePipes,
 } from "@nestjs/common";
 import { Request } from "express";
-
-import { ZodValidationPipe } from "../../pipes/zod-validation-pipe";
 import { nextLink, omitShard, PaginationPage } from "../shared/pagination";
 import {
   type Page,
@@ -31,9 +29,15 @@ export class WorkersController {
   constructor(private readonly service: WorkersService) {}
 
   @Post()
-  @UsePipes(new ZodValidationPipe(createWorkerSchema))
-  async create(@Body() data: CreateWorker): Promise<Response<WorkerDTO>> {
-    return { data: await this.service.create(data) };
+  async create(@Body() data: unknown): Promise<Response<WorkerDTO>> {
+    const result = createWorkerSchema.safeParse(data);
+    if (!result.success) {
+      const issue = result.error.issues[0];
+      throw new BadRequestException(
+        issue ? `${issue.message}: '${issue.path.join(".")}'` : "Validation failed",
+      );
+    }
+    return { data: await this.service.create(result.data) };
   }
 
   @Get("/claims")
@@ -52,8 +56,14 @@ export class WorkersController {
 
   @Get("/:id")
   async getById(
-    @Param("id", ParseIntPipe) id: number,
+    @Param("id") idParam: string,
   ): Promise<Response<WorkerDTO>> {
+    if (!/^\d+$/.test(idParam)) {
+      throw new BadRequestException(
+        "Validation failed (numeric string is expected)",
+      );
+    }
+    const id = parseInt(idParam, 10);
     const data = await this.service.getById(id);
     if (!data) {
       throw new Error(`ID ${id} not found.`);
