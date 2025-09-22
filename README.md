@@ -48,9 +48,3 @@ To deploy:
    - `npm install`
    - `npx prisma migrate deploy`
 4. Start the server: `npm run start:prod`
-
----
-See `.github/pull_request_template.md` for PR guidelines.
-## Submission
-
-Submit your solution by creating a pull request (PR) on this repository. Please **do not** merge your PR. Instead, return to your Hatchways assessment page to confirm your submission.
